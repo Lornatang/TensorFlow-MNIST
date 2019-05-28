@@ -12,41 +12,65 @@
 # limitations under the License.
 # ==============================================================================
 
-from datasets.mnist import load_data
-from models.make_model import *
+from datasets import mnist, kmnist, emnist
+from models.lenet import *
 
 import matplotlib.pyplot as plt
 
 import os
 
-HEIGHT = 32
-WIDTH = 32
-checkpoint_dir = 'training_checkpoints'
+import argparse
 
-EPOCHS = 5
-BUFFER_SIZE = 5000
-BATCH_SIZE = 64
+parser = argparse.ArgumentParser('Classifier of MNIST datasets!')
+parser.add_argument('-d', '--dataset', type=str, default='mnist',
+                    help="datsets {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
+parser.add_argument('--num_classes', type=int, default=10,
+                    help="Classification picture type.")
+parser.add_argument('--buffer_size', type=int, default=5000,
+                    htlp="Train dataset size. default: 5000.")
+parser.add_argument('--batch_size', type=int, default=64,
+                    help="one step train dataset size. default: 64")
+parser.add_argument('--e', '--epochs', type=int, default=5,
+                    help="Train epochs. default: 5")
+parser.add_argument('--lr', '--learning_rate', type=float, default=0.001,
+                    help='float >= 0. Learning rate. default: 0.001')
+parser.add_argument('--b1', '--beta1', type=float, default=0.9,
+                    help="float, 0 < beta < 1. Generally close to 1. default: 0.9")
+parser.add_argument('--b2', '--beta2', type=float, default=0.999,
+                    help="float, 0 < beta < 1. Generally close to 1. default: 0.999")
+parser.add_argument('--epsilon', type=float, default=1e-8,
+                    help="float >= 0. Fuzz factor. defaults: 1e-8.")
+parser.add_argument('--decay', type=float, default=0.,
+                    help=" float >= 0. Learning rate decay over each update. defaults: 0. .")
+parser.add_argument('--dir', '--checkpoint_dir', action='store_true', type=str,
+                    help='Model save path.')
+
+args = parser.parse_args()
+print(args)
 
 
-
-
-
-train_dataset, test_dataset, val_dataset = load_data()
-
-model = lenet(num_classes=10)
+model = lenet(args.num_classes)
 model.summary()
 
-model.compile(optimizer=tf.optimizers.Adam(),
-              loss=tf.losses.SparseCategoricalCrossentropy(),
+optimizer = tf.optimizers.Adam(lr=args.lr,
+                               beta_1=args.b1,
+                               beta_2=args.b2,
+                               epsilon=args.epsilon,
+                               decay=args.decay)
+
+entropy = tf.losses.SparseCategoricalCrossentropy()
+
+model.compile(optimizer=optimizer,
+              loss=entropy,
               metrics=['accuracy'])
 
 
 def train():
   history = model.fit(train_dataset,
-                      epochs=EPOCHS,
+                      epochs=args.epochs,
                       validation_data=val_dataset)
 
-  checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
+  checkpoint_prefix = os.path.join(args.checkpoint_dir, "ckpt")
   checkpoint = tf.train.Checkpoint(model=model)
   checkpoint.save(file_prefix=checkpoint_prefix)
 
@@ -64,6 +88,7 @@ def train():
   plt.ylabel('Accuracy')
   plt.ylim([min(plt.ylim()), 1])
   plt.title('Training and Validation Accuracy')
+  plt.xlabel('epoch')
 
   plt.subplot(2, 1, 2)
   plt.plot(loss, label='Training Loss')
@@ -76,4 +101,18 @@ def train():
   plt.show()
 
 
-train()
+if __name__ == '__main__':
+  if args.dataset == 'mnist':
+    assert args.num_classes == 10
+    train_dataset, test_dataset, val_dataset = mnist.load_data()
+  elif args.dataset == 'kmnist':
+    assert args.num_classes == 10
+    train_dataset, test_dataset, val_dataset = kmnist.load_data()
+  elif args.dataset == 'emnist':
+    assert args.num_classes == 62
+    train_dataset, test_dataset, val_dataset = emnist.load_data()
+  else:
+    exit(0)
+    print(args)
+
+  train()
