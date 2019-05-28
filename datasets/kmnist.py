@@ -36,7 +36,7 @@ def process_image_with_kmnist(image, label, height=32, width=32):
   return image, label
 
 
-def load_data(name='kmnist', train_size=7, test_size=2, val_size=1, buffer_size=1000, batch_size=32):
+def load_data_kmnist(name='kmnist', train_size=7, test_size=2, val_size=1, buffer_size=1000, batch_size=32):
   """ load every mnist dataset.
 
   Args:
