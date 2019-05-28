@@ -19,7 +19,7 @@ from models.lenet import lenet
 
 checkpoint_dir = 'training_checkpoints'
 
-model = lenet(num_classes=10)
+model = lenet()
 
 checkpoint = tf.train.Checkpoint(model=model)
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
