@@ -12,19 +12,40 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Load MNIST dataset for use tfds lib"""
-
+import tensorflow as tf
 import tensorflow_datasets as tfds
 
 
-def load_dataset(name='mnist', train_size=7, test_size=2, val_size=1):
+def process_image_with_emnist(image, label, height=32, width=32):
+  """ Resize the images to a fixes input size,
+      and rescale the input channels to a range of [-1,1].
+
+  Args:
+    image: "tensor, float32", image input.
+    label: "tensor, int64",   image label.
+    height: "int64", (224, 224, 3) -> (height, 224, 3).
+    width: "int64",  (224, 224, 3) -> (224, width, 3).
+
+  Returns:
+    image input, image label.
+
+  """
+  image = tf.cast(image, tf.float32)
+  image = image / 255.
+  image = tf.image.resize(image, (height, width))
+  return image, label
+
+
+def load_data(name='emnist', train_size=7, test_size=2, val_size=1, buffer_size=1000, batch_size=32):
   """ load every mnist dataset.
 
   Args:
-    name:        "str",   dataset name.       default: mnist.
+    name:        "str",   dataset name.       default: 'emnist'.
     train_size:  "int64", train dataset.      default:7
     test_size:   "int64", test dataset.       default:2
     val_size:    "int64", val dataset.        default:1
+    buffer_size: "int64", dataset size.       default:1000.
+    batch_size:  "int64", batch size.         default:32
 
   Returns:
     dataset,
@@ -35,5 +56,9 @@ def load_dataset(name='mnist', train_size=7, test_size=2, val_size=1):
   (train_dataset, test_dataset, val_dataset) = tfds.load(name,
                                                          split=list(splits),
                                                          as_supervised=True)
+
+  train_dataset = train_dataset.map(process_image_with_emnist).shuffle(buffer_size).batch(batch_size)
+  test_dataset = test_dataset.map(process_image_with_emnist).batch(batch_size)
+  val_dataset = val_dataset.map(process_image_with_emnist).batch(batch_size)
 
   return train_dataset, test_dataset, val_dataset

@@ -12,11 +12,10 @@
 # limitations under the License.
 # ==============================================================================
 
-from datasets.load_data import load_dataset
+from datasets.mnist import load_data
 from models.make_model import *
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 import os
 
@@ -29,31 +28,10 @@ BUFFER_SIZE = 5000
 BATCH_SIZE = 64
 
 
-def process_image(image, label, height=HEIGHT, width=WIDTH):
-  """ Resize the images to a fixes input size,
-      and rescale the input channels to a range of [-1,1].
-
-  Args:
-    image: "tensor, float32", image input.
-    label: "tensor, int64",   image label.
-    height: "int64", (224, 224, 3) -> (height, 224, 3).
-    width: "int64",  (224, 224, 3) -> (224, width, 3).
-
-  Returns:
-    image input, image label.
-
-  """
-  image = tf.cast(image, tf.float32)
-  image = image / 255.
-  image = tf.image.resize(image, (height, width))
-  return image, label
 
 
-train_dataset, test_dataset, val_dataset = load_dataset(name='mnist')
-(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
-train_dataset = train_dataset.map(process_image).shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
-test_dataset = test_dataset.map(process_image).batch(BATCH_SIZE)
-val_dataset = val_dataset.map(process_image).batch(BATCH_SIZE)
+
+train_dataset, test_dataset, val_dataset = load_data()
 
 model = lenet(num_classes=10)
 model.summary()
