@@ -115,3 +115,4 @@ dmypy.json
 .DS_Store
 .idea/
 .vscode/
+training_checkpoints
