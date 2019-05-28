@@ -12,6 +12,8 @@
 # limitations under the License.
 # ==============================================================================
 
+"""VGG16 model for TensorFlow."""
+
 import tensorflow as tf
 
 from tensorflow.python.keras import backend
@@ -20,12 +22,12 @@ from tensorflow.python.keras import models
 from tensorflow.python.keras import utils
 
 
-def AlexNet(include_top=True,
-            input_tensor=None,
-            input_shape=None,
-            pooling=None,
-            classes=1000):
-  """ Instantiates the AlexNet architecture.
+def VGG19(include_top=True,
+          input_tensor=None,
+          input_shape=None,
+          pooling=None,
+          classes=1000):
+  """ Instantiates the LeNet-5 architecture.
 
   Args:
     include_top: whether to include the 3 fully-connected
@@ -58,12 +60,11 @@ def AlexNet(include_top=True,
 
   Returns:
     A Keras model instance.
-
   """
-  if classes == 1000:
-    raise ValueError('If use dataset is `imagenet`, please use it,'
-                     'otherwise please use classifier images classes.')
 
+  if classes == 1000:
+    raise ValueError('If use dataset is `imagenet`, please use it'
+                     'otherwise please use classifier images classes.')
   if input_shape == (32, 32, 1):
     raise ValueError('If use input shape is `32 * 32 * 1`, please don`t use it! '
                      'So you should change network architecture '
@@ -76,45 +77,90 @@ def AlexNet(include_top=True,
       img_input = layers.Input(tensor=input_tensor, shape=input_shape)
     else:
       img_input = input_tensor
-  x = layers.Conv2D(96, (11, 11),
-                    strides=4,
-                    activation=tf.nn.relu,
-                    padding='same',
-                    name='conv1')(img_input)
-  x = layers.MaxPool2D((2, 2), strides=(2, 2), name='max_pool1')(x)
 
-  x = layers.Conv2D(256, (5, 5),
-                    strides=1,
+  # Block 1
+  x = layers.Conv2D(64, (3, 3),
                     activation=tf.nn.relu,
                     padding='same',
-                    name='conv2')(x)
-  x = layers.MaxPool2D((3, 3), strides=(2, 2), name='max_pool2')(x)
+                    name='block1_conv1')(img_input)
+  x = layers.Conv2D(64, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block1_conv2')(x)
+  x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
 
-  x = layers.Conv2D(384, (3, 3),
-                    strides=1,
+  # Block 2
+  x = layers.Conv2D(128, (3, 3),
                     activation=tf.nn.relu,
                     padding='same',
-                    name='conv3')(x)
-  x = layers.Conv2D(384, (3, 3),
-                    strides=1,
+                    name='block2_conv1')(x)
+  x = layers.Conv2D(128, (3, 3),
                     activation=tf.nn.relu,
                     padding='same',
-                    name='conv4')(x)
+                    name='block2_conv2')(x)
+  x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
+
+  # Block 3
   x = layers.Conv2D(256, (3, 3),
-                    strides=1,
                     activation=tf.nn.relu,
                     padding='same',
-                    )(x)
-  x = layers.MaxPool2D((3, 3), strides=(2, 2), name='max_pool3')(x)
+                    name='block3_conv1')(x)
+  x = layers.Conv2D(256, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block3_conv2')(x)
+  x = layers.Conv2D(256, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block3_conv3')(x)
+  x = layers.Conv2D(256, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block3_conv4')(x)
+  x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool')(x)
 
-  x = layers.AvgPool2D((6, 6), strides=(6, 6), name='avg_pool1')(x)
+  # Block 4
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block4_conv1')(x)
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block4_conv2')(x)
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block4_conv3')(x)
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block4_conv4')(x)
+  x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool')(x)
+
+  # Block 5
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block5_conv1')(x)
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block5_conv2')(x)
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block5_conv3')(x)
+  x = layers.Conv2D(512, (3, 3),
+                    activation=tf.nn.relu,
+                    padding='same',
+                    name='block5_conv4')(x)
+  x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool')(x)
 
   if include_top:
     # Classification block
     x = layers.Flatten(name='flatten')(x)
-    x = layers.Dropout(0.3, name='drop1')(x)
     x = layers.Dense(4096, activation=tf.nn.relu, name='fc1')(x)
-    x = layers.Dropout(0.3, name='drop2')(x)
     x = layers.Dense(4096, activation=tf.nn.relu, name='fc2')(x)
     x = layers.Dense(classes, activation=tf.nn.softmax, name='predictions')(x)
   else:
@@ -130,6 +176,6 @@ def AlexNet(include_top=True,
   else:
     inputs = img_input
   # Create model.
+  model = models.Model(inputs, x, name='vgg16')
 
-  model = models.Model(inputs, x, name='AlexNet')
   return model
