@@ -12,7 +12,13 @@
 # limitations under the License.
 # ==============================================================================
 
-"""VGG16 model for TensorFlow."""
+"""VGG19 model for TensorFlow.
+
+# Reference
+
+- [Very Deep Convolutional Networks for Large-Scale Image Recognition](
+    https://arxiv.org/abs/1409.1556)
+"""
 
 import tensorflow as tf
 
@@ -179,3 +185,6 @@ def VGG19(include_top=True,
   model = models.Model(inputs, x, name='vgg16')
 
   return model
+
+
+tf.keras.applications.vgg16
