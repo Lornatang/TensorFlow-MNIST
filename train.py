@@ -12,6 +12,8 @@
 # limitations under the License.
 # ==============================================================================
 
+"""main func."""
+
 # Import dataset and model network
 from datasets import mnist, kmnist, emnist
 import tensorflow as tf
@@ -51,7 +53,7 @@ parser.add_argument('--decay', type=float, default=0.,
                     help=" float >= 0. Learning rate decay over each update. defaults: 0. .")
 parser.add_argument('--name', type=str,
                     help="Choose to use a neural network.")
-parser.add_argument('--dir', '--checkpoint_dir', type=str,
+parser.add_argument('--checkpoint_dir', '--dir', type=str,
                     help="Model save path.")
 
 # Parses the parameters and prints them
@@ -76,14 +78,17 @@ else:
 assert model is not None
 model.summary()
 
+# define optim for Adam.
 optimizer = tf.optimizers.Adam(lr=args.lr,
                                beta_1=args.b1,
                                beta_2=args.b2,
                                epsilon=args.epsilon,
                                decay=args.decay)
 
+# The cross entropy loss between the predicted value and the label was calculated
 entropy = tf.losses.SparseCategoricalCrossentropy()
 
+# setup model compile
 model.compile(optimizer=optimizer,
               loss=entropy,
               metrics=['accuracy'])
