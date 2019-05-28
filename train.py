@@ -12,25 +12,32 @@
 # limitations under the License.
 # ==============================================================================
 
+# Import dataset and model network
 from datasets import mnist, kmnist, emnist
-from models.lenet import *
+import tensorflow as tf
 
+from models import LeNet
+from models import AlexNet
+from models import VGG16
+from models import VGG19
+
+# plt pic
 import matplotlib.pyplot as plt
 
 import os
-
 import argparse
 
+# Convenient management
 parser = argparse.ArgumentParser('Classifier of MNIST datasets!')
-parser.add_argument('-d', '--dataset', type=str, default='mnist',
-                    help="datsets {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
+parser.add_argument('--dataset', '--d', type=str, default='mnist',
+                    help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
 parser.add_argument('--num_classes', type=int, default=10,
-                    help="Classification picture type.")
+                    help="Classification picture type. default: 10")
 parser.add_argument('--buffer_size', type=int, default=5000,
-                    htlp="Train dataset size. default: 5000.")
+                    help="Train dataset size. default: 5000.")
 parser.add_argument('--batch_size', type=int, default=64,
                     help="one step train dataset size. default: 64")
-parser.add_argument('--e', '--epochs', type=int, default=5,
+parser.add_argument('--epochs', '--e', type=int, default=5,
                     help="Train epochs. default: 5")
 parser.add_argument('--lr', '--learning_rate', type=float, default=0.001,
                     help='float >= 0. Learning rate. default: 0.001')
@@ -42,14 +49,31 @@ parser.add_argument('--epsilon', type=float, default=1e-8,
                     help="float >= 0. Fuzz factor. defaults: 1e-8.")
 parser.add_argument('--decay', type=float, default=0.,
                     help=" float >= 0. Learning rate decay over each update. defaults: 0. .")
-parser.add_argument('--dir', '--checkpoint_dir', action='store_true', type=str,
-                    help='Model save path.')
+parser.add_argument('--name', type=str,
+                    help="Choose to use a neural network.")
+parser.add_argument('--dir', '--checkpoint_dir', type=str,
+                    help="Model save path.")
 
+# Parses the parameters and prints them
 args = parser.parse_args()
 print(args)
 
+if args.name == 'lenet':
+  model = LeNet(input_shape=(32, 32, 1),
+                classes=args.num_classes)
+elif args.name == 'alexnet':
+  model = AlexNet(input_shape=(32, 32, 1),
+                  classes=args.num_classes)
+elif args.name == 'vgg16':
+  model = VGG16(input_shape=(32, 32, 1),
+                classes=args.num_classes)
+elif args.name == 'vgg19':
+  model = VGG19(input_shape=(32, 32, 1),
+                classes=args.num_classes)
+else:
+  model = None
 
-model = lenet(args.num_classes)
+assert model is not None
 model.summary()
 
 optimizer = tf.optimizers.Adam(lr=args.lr,
@@ -104,13 +128,13 @@ def train():
 if __name__ == '__main__':
   if args.dataset == 'mnist':
     assert args.num_classes == 10
-    train_dataset, test_dataset, val_dataset = mnist.load_data()
+    train_dataset, test_dataset, val_dataset = mnist.load_data_mnist()
   elif args.dataset == 'kmnist':
     assert args.num_classes == 10
-    train_dataset, test_dataset, val_dataset = kmnist.load_data()
+    train_dataset, test_dataset, val_dataset = kmnist.load_data_kmnist()
   elif args.dataset == 'emnist':
     assert args.num_classes == 62
-    train_dataset, test_dataset, val_dataset = emnist.load_data()
+    train_dataset, test_dataset, val_dataset = emnist.load_data_emnist()
   else:
     exit(0)
     print(args)
