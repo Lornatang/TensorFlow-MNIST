@@ -14,7 +14,7 @@
 
 import tensorflow as tf
 
-from models.make_model import lenet
+from models.lenet import lenet
 
 
 checkpoint_dir = 'training_checkpoints'
