@@ -134,4 +134,4 @@ option:
 ![](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/pred_kmnist.png)
 
 ## LINCENSE
-[Apache License 2.0]https://github.com/Lornatang/TensorFlow-MNIST/blob/master/LICENSE
+[Apache License 2.0](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/LICENSE)
