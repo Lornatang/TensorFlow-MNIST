@@ -104,7 +104,7 @@ optimizer = tf.keras.optimizers.Adam(lr=args.lr,
                                      decay=args.decay)
 
 # The cross entropy loss between the predicted value and the label was calculated
-entropy = tf.keras.losses.sparse_categorical_crossentropy()
+entropy = tf.keras.losses.sparse_categorical_crossentropy
 
 # setup model compile
 model.compile(optimizer=optimizer,
