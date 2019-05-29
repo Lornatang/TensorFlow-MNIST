@@ -49,7 +49,7 @@ KMNIST Dataset is created by ROIS-DS Center for Open Data in the Humanities (COD
 
 GitHub: **[Repository for Kuzushiji-MNIST, Kuzushiji-49, and Kuzushiji-Kanji](https://github.com/rois-codh/kmnist)**
 
-![The 10 classes of Kuzushiji-MNIST, with the first column showing each character's modern hiragana counterpart.](http://codh.rois.ac.jp/img/kmnist.png)
+![The 10 classes of Kuzushiji-MNIST, with the first column showing each character's modern hiragana counterpart.](https://github.com/Lornatang/TensorFlow-MNIST/raw/master/img/introduction_kmnist.png)
 
 Information about Kuzushiji research is available in 2nd CODH Seminar: Kuzushiji Challenge - Future of Machine Recognition and Human Transcription and Kuzushiji Challenge!. Moreover, Kaggle has many examples about how dataset can be used.
 
