@@ -14,15 +14,57 @@
 
 import tensorflow as tf
 
-from models.lenet import lenet
+from models import LeNet
+
+import argparse
+
+parser = argparse.ArgumentParser('Prediction mnist label')
+
+parser.add_argument('--path', type=str,
+                    help='Image path, best input abs path. `./datasets/5.png`')
+parser.add_argument('--num_classes', type=int, default=10,
+                    help="Classification picture type. default: 10")
+parser.add_argument('--checkpoint_dir', '--dir', type=str,
+                    help="Model save path.")
+args = parser.parse_args()
 
 
-checkpoint_dir = 'training_checkpoints'
+def prediction(image):
+  """ prediction image label.
 
-model = lenet()
+  Args:
+    image: 'input tensor'.
 
-checkpoint = tf.train.Checkpoint(model=model)
-checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
+  Returns:
+    'int64', label
+
+  """
+  # read img to string.
+  image = tf.io.read_file(image)
+  # decode png to tensor
+  image = tf.image.decode_png(image, channels=1)
+  # convert image to float32
+  image = tf.cast(image, tf.float32)
+  # image norm.
+  image = image / 255.
+  # image resize model input size.
+  image = tf.image.resize(image, (32, 32))
+  # Add the image to a batch where it's the only member.
+  image = (tf.expand_dims(image, 0))
+
+  model = LeNet(input_shape=(32, 32, 1),
+                classes=args.num_classes)
+
+  print(f"==========================================")
+  print(f"Loading model.............................")
+  checkpoint = tf.train.Checkpoint(model=model)
+  checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir=args.checkpoint_dir))
+  print(f"Load model successful!")
+  print(f"==========================================")
+  print(f"Start making predictions about the picture.")
+  print(f"==========================================")
+  predictions = model(image)
+  print(f"label is : {tf.argmax(predictions[0])}")
 
 
-
+prediction(args.path)
