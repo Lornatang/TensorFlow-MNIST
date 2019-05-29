@@ -49,7 +49,7 @@ KMNIST Dataset is created by ROIS-DS Center for Open Data in the Humanities (COD
 
 GitHub: **[Repository for Kuzushiji-MNIST, Kuzushiji-49, and Kuzushiji-Kanji](https://github.com/rois-codh/kmnist)**
 
-![The 10 classes of Kuzushiji-MNIST, with the first column showing each character's modern hiragana counterpart.](https://github.com/Lornatang/TensorFlow-MNIST/raw/master/img/introduction_kmnist.png)
+![The 10 classes of Kuzushiji-MNIST, with the first column showing each character's modern hiragana counterpart.](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/introduction_kmnist.png)
 
 Information about Kuzushiji research is available in 2nd CODH Seminar: Kuzushiji Challenge - Future of Machine Recognition and Human Transcription and Kuzushiji Challenge!. Moreover, Kaggle has many examples about how dataset can be used.
 
@@ -105,33 +105,33 @@ option:
 
 ### MNIST acc and loss
 
-![MNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/mnist_acc_loss.png)
+![MNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/mnist_acc_loss.png)
 
 ### prediction MNIST
 
 `python3 prediction.py --dir kmnist_checkpoint --path ./datasets/mnist/5.png`
 
-![](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/pred_mnist.png)
+![](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/pred_mnist.png)
 
 ### EMNIST acc and loss
 
-![EMNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/emnist_acc_loss.png)
+![EMNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/emnist_acc_loss.png)
 
 ### prediction EMNIST
 
 `python3 prediction.py --dir emnist_checkpoint --path ./datasets/emnist/5.png`
 
-![](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/pred_emnist.png)
+![](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/pred_emnist.png)
 
 ### KMNIST acc and loss
 
-![KMNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/kmnist_acc_loss.png)
+![KMNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/kmnist_acc_loss.png)
 
 ### prediction KMNIST
 
 `python3 prediction.py --dir kmnist_checkpoint --path ./datasets/kmnist/5.png`
 
-![](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/pred_kmnist.png)
+![](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/pred_kmnist.png)
 
 ## LINCENSE
 [Apache License 2.0]https://github.com/Lornatang/TensorFlow-MNIST/blob/master/LICENSE
