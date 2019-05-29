@@ -125,13 +125,13 @@ option:
 
 ### KMNIST acc and loss
 
-![KMNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/kmnist_acc_loss.png)
+![KMNIST acc and loss](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/kmnist_acc_loss.png)
 
 ### prediction KMNIST
 
 `python3 prediction.py --dir kmnist_checkpoint --path ./datasets/kmnist/5.png`
 
-![](https://github.com/Lornatang/TensorFlow-MNIST/tree/master/img/pred_kmnist.png)
+![](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/img/pred_kmnist.png)
 
 ## LINCENSE
 [Apache License 2.0](https://github.com/Lornatang/TensorFlow-MNIST/blob/master/LICENSE)
