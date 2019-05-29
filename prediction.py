@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser('Prediction mnist label')
 
 parser.add_argument('--path', type=str,
                     help='Image path, best input abs path. `./datasets/5.png`')
-parser.add_argument('--num_classes', type=int, default=10,
+parser.add_argument('--classes', type=int, default=10,
                     help="Classification picture type. default: 10")
 parser.add_argument('--checkpoint_dir', '--dir', type=str,
                     help="Model save path.")
@@ -69,7 +69,7 @@ def prediction(image):
   image = (tf.expand_dims(image, 0))
 
   model = LeNet(input_shape=(32, 32, 1),
-                classes=args.num_classes)
+                classes=args.classes)
 
   print(f"==========================================")
   print(f"Loading model.............................")

@@ -34,7 +34,7 @@ import warnings
 parser = argparse.ArgumentParser('Classifier of MNIST datasets!')
 parser.add_argument('--dataset', '--d', type=str, default='mnist',
                     help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
-parser.add_argument('--num_classes', type=int, default=10,
+parser.add_argument('--classes', type=int, default=10,
                     help="Classification picture type. default: 10")
 parser.add_argument('--buffer_size', type=int, default=5000,
                     help="Train dataset size. default: 5000.")
@@ -64,16 +64,16 @@ print(args)
 # check model name
 if args.name == 'lenet':
   model = LeNet(input_shape=(32, 32, 1),
-                classes=args.num_classes)
+                classes=args.classes)
 elif args.name == 'alexnet':
   model = AlexNet(input_shape=(32, 32, 1),
-                  classes=args.num_classes)
+                  classes=args.classes)
 elif args.name == 'vgg16':
   model = VGG16(input_shape=(32, 32, 1),
-                classes=args.num_classes)
+                classes=args.classes)
 elif args.name == 'vgg19':
   model = VGG19(input_shape=(32, 32, 1),
-                classes=args.num_classes)
+                classes=args.classes)
 else:
   model = None
 
@@ -150,13 +150,13 @@ def train():
 
 if __name__ == '__main__':
   if args.dataset == 'mnist':
-    assert args.num_classes == 10
+    assert args.classes == 10
     train_dataset, test_dataset, val_dataset = mnist.load_data_mnist()
   elif args.dataset == 'kmnist':
-    assert args.num_classes == 10
+    assert args.classes == 10
     train_dataset, test_dataset, val_dataset = kmnist.load_data_kmnist()
   elif args.dataset == 'emnist':
-    assert args.num_classes == 62
+    assert args.classes == 62
     train_dataset, test_dataset, val_dataset = emnist.load_data_emnist()
   else:
     exit(0)
