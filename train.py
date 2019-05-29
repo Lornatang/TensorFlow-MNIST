@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt
 
 import os
 import argparse
+import warnings
 
 # Convenient management
 parser = argparse.ArgumentParser('Classifier of MNIST datasets!')
@@ -52,7 +53,7 @@ parser.add_argument('--epsilon', type=float, default=1e-8,
 parser.add_argument('--decay', type=float, default=0.,
                     help=" float >= 0. Learning rate decay over each update. defaults: 0. .")
 parser.add_argument('--name', type=str,
-                    help="Choose to use a neural network.")
+                    help="Choose to use a neural network. option: {`mnist`, `alexnet`, `vgg16`, `vgg19`}")
 parser.add_argument('--checkpoint_dir', '--dir', type=str,
                     help="Model save path.")
 
@@ -60,6 +61,7 @@ parser.add_argument('--checkpoint_dir', '--dir', type=str,
 args = parser.parse_args()
 print(args)
 
+# check model name
 if args.name == 'lenet':
   model = LeNet(input_shape=(32, 32, 1),
                 classes=args.num_classes)
@@ -76,9 +78,25 @@ else:
   model = None
 
 assert model is not None
+if model is None:
+  raise ValueError('If you use special model, please reference parameter help.'
+                   '`python train.py --help / -h`.')
+
 model.summary()
 
-# define optim for Adam.
+# check optimizer paras
+if args.lr < 0:
+  warnings.warn('float >= 0. Learning rate.')
+if args.b1 <= 0:
+  warnings.warn('float, 0 < beta < 1. Generally close to 1')
+if args.b2 <= 0:
+  warnings.warn('float, 0 < beta < 1. Generally close to 1.')
+if args.epsilon < 0:
+  warnings.warn('float >= 0. Fuzz factor.')
+if args.decay < 0:
+  warnings.warn('float >= 0. Learning rate decay over each update. ')
+
+# define optimizer for Adam.
 optimizer = tf.optimizers.Adam(lr=args.lr,
                                beta_1=args.b1,
                                beta_2=args.b2,
@@ -142,6 +160,7 @@ if __name__ == '__main__':
     train_dataset, test_dataset, val_dataset = emnist.load_data_emnist()
   else:
     exit(0)
-    print(args)
+    raise ValueError('If you use special dataset, please reference parameter help.'
+                     '`python train.py --help / -h`.')
 
   train()
