@@ -97,14 +97,14 @@ if args.decay < 0:
   warnings.warn('float >= 0. Learning rate decay over each update. ')
 
 # define optimizer for Adam.
-optimizer = tf.keras.optimizers.Adam(lr=args.lr,
+optimizer = tf.optimizers.Adam(lr=args.lr,
                                      beta_1=args.b1,
                                      beta_2=args.b2,
                                      epsilon=args.epsilon,
                                      decay=args.decay)
 
 # The cross entropy loss between the predicted value and the label was calculated
-entropy = tf.keras.losses.sparse_categorical_crossentropy
+entropy = tf.losses.SparseCategoricalCrossentropy()
 
 # setup model compile
 model.compile(optimizer=optimizer,
