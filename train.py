@@ -97,7 +97,7 @@ if args.decay < 0:
   warnings.warn('float >= 0. Learning rate decay over each update. ')
 
 # define optimizer for Adam.
-optimizer = tf.optimizers.Adam(lr=args.lr,
+optimizer = tf.keras.optimizers.Adam(lr=args.lr,
                                beta_1=args.b1,
                                beta_2=args.b2,
                                epsilon=args.epsilon,
