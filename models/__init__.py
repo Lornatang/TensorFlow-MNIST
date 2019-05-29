@@ -16,3 +16,4 @@ from .lenet import LeNet
 from .alexnet import AlexNet
 from .vgg16 import VGG16
 from .vgg19 import VGG19
+from .mobilenetV2 import MobileNetV2
