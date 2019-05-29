@@ -98,10 +98,10 @@ if args.decay < 0:
 
 # define optimizer for Adam.
 optimizer = tf.optimizers.Adam(lr=args.lr,
-                                     beta_1=args.b1,
-                                     beta_2=args.b2,
-                                     epsilon=args.epsilon,
-                                     decay=args.decay)
+                               beta_1=args.b1,
+                               beta_2=args.b2,
+                               epsilon=args.epsilon,
+                               decay=args.decay)
 
 # The cross entropy loss between the predicted value and the label was calculated
 entropy = tf.losses.SparseCategoricalCrossentropy()
