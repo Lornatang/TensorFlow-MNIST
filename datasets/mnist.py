@@ -42,7 +42,7 @@ def load_data_mnist(name='mnist', train_size=7, test_size=2, val_size=1, buffer_
   """ load every mnist dataset.
 
   Args:
-    name:        "str",   dataset name.       default: 'mnist'.
+    name:        "str",   dataset name.       default: 'mnist datasets'.
     train_size:  "int64", train dataset.      default:7
     test_size:   "int64", test dataset.       default:2
     val_size:    "int64", val dataset.        default:1
