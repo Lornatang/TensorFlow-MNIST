@@ -185,6 +185,3 @@ def VGG19(include_top=True,
   model = models.Model(inputs, x, name='vgg16')
 
   return model
-
-
-tf.keras.applications.vgg16
