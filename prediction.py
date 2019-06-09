@@ -12,30 +12,51 @@
 # limitations under the License.
 # ==============================================================================
 
-import tensorflow as tf
-import matplotlib.pyplot as plt
-from PIL import Image
+from models import *
+from dataset import get_label_name
 
-from models import LeNet
+import tensorflow as tf
 
 import argparse
+import time
 
 parser = argparse.ArgumentParser('Prediction mnist label')
 
-parser.add_argument('--path', type=str,
-                    help='Image path, best input abs path. `./datasets/5.png`')
+parser.add_argument('--height', type=int, default=32,
+                    help='Image height. default: 224')
+parser.add_argument('--width', type=int, default=32,
+                    help='Image width.  default: 224')
+parser.add_argument('--channels', type=int, default=1,
+                    help='Image color RBG. default: 1')
 parser.add_argument('--classes', type=int, default=10,
                     help="Classification picture type. default: 10")
 parser.add_argument('--checkpoint_dir', '--dir', type=str,
                     help="Model save path.")
 args = parser.parse_args()
 
+label_names = get_label_name()
+label_names = label_names.features['label'].int2str
 
-def process_image(image):
+model = LeNet(input_shape=(32, 32, 1),
+              classes=args.classes)
+
+
+print(f"==========================================")
+print(f"Loading model.............................")
+checkpoint = tf.train.Checkpoint(model=model)
+checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir=args.checkpoint_dir))
+print(f"Load model successful!")
+print(f"==========================================")
+print()
+
+
+def process_image(image, height=args.height, width=args.width):
   """ process image ops.
 
     Args:
       image: 'input tensor'.
+      height: 'int64' img height.
+      width: 'int64' img width.
 
     Returns:
       tensor
@@ -50,48 +71,43 @@ def process_image(image):
   # image norm.
   image = image / 255.
   # image resize model input size.
-  image = tf.image.resize(image, (32, 32))
+  image = tf.image.resize(image, (height, width))
+
   return image
 
 
-def prediction(image):
+def prediction(img):
   """ prediction image label.
 
   Args:
-    image: 'input tensor'.
+    img: 'input tensor'.
 
   Returns:
     'int64', label
 
   """
-  image = process_image(image)
+  image = process_image(img)
   # Add the image to a batch where it's the only member.
   image = (tf.expand_dims(image, 0))
 
-  model = LeNet(input_shape=(32, 32, 1),
-                classes=args.classes)
+  print(f"Start making predictions about the picture......")
+  start = time.time()
 
-  print(f"==========================================")
-  print(f"Loading model.............................")
-  checkpoint = tf.train.Checkpoint(model=model)
-  checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir=args.checkpoint_dir))
-  print(f"Load model successful!")
-  print(f"==========================================")
-  print(f"Start making predictions about the picture.")
-  print(f"==========================================")
   predictions = model(image)
-  classes = tf.argmax(predictions[0])
-  print(f"label is : {classes}")
-
-  image = Image.open(args.path)
-  plt.figure(figsize=(4, 4))
-  plt.xticks([])
-  plt.yticks([])
-  plt.grid(False)
-  plt.imshow(image, cmap='gray')
-  plt.xlabel(int(classes))
-  plt.show()
+  classes = int(tf.argmax(predictions[0]))
+  print("done.")
+  print()
+  print(f"Label is : {label_names(classes)} times: {time.time() - start:.4} sec")
+  print()
 
 
 if __name__ == '__main__':
-  prediction(args.path)
+  while True:
+    a = input("files(input '0' or 'any str' to exit.):")
+    if a == '0':
+      print("Successful exit. return status 0.")
+      exit(0)
+    else:
+      a = a[:-1]
+      a = tf.cast(a, tf.string)
+      prediction(a)
