@@ -15,13 +15,10 @@
 """main func."""
 
 # Import dataset and model network
-from datasets import mnist, kmnist, emnist
-import tensorflow as tf
+from v0_2.dataset import load_data
+from v0_2.models import *
 
-from models import LeNet
-from models import AlexNet
-from models import VGG16
-from models import VGG19
+import tensorflow as tf
 
 # plt pic
 import matplotlib.pyplot as plt
@@ -31,19 +28,28 @@ import argparse
 import warnings
 
 # Convenient management
-parser = argparse.ArgumentParser('Classifier of MNIST datasets!')
-parser.add_argument('--dataset', '--d', type=str, default='mnist',
+parser = argparse.ArgumentParser('Classifier of Cats_VS_Dogs datasets!')
+parser.add_argument('--dataset', '--d', type=str, default='caltech101',
                     help="datset {'mnist', 'kmnist', 'emnist}. default: 'mnist'")
-parser.add_argument('--classes', type=int, default=10,
-                    help="Classification picture type. default: 10")
-parser.add_argument('--buffer_size', type=int, default=5000,
-                    help="Train dataset size. default: 5000.")
-parser.add_argument('--batch_size', type=int, default=64,
-                    help="one step train dataset size. default: 64")
-parser.add_argument('--epochs', '--e', type=int, default=5,
-                    help="Train epochs. default: 5")
-parser.add_argument('--lr', '--learning_rate', type=float, default=0.001,
-                    help='float >= 0. Learning rate. default: 0.001')
+
+parser.add_argument('--height', '--h', type=int, default=224,
+                    help='Image height. default: 224')
+parser.add_argument('--width', '--w', type=int, default=224,
+                    help='Image width.  default: 224')
+parser.add_argument('--channels', '--c', type=int, default=3,
+                    help='Image color RBG. default: 3')
+
+parser.add_argument('--classes', type=int, default=102,
+                    help="Classification picture type. default: 102")
+parser.add_argument('--buffer_size', type=int, default=1000,
+                    help="Train dataset size. default: 1000.")
+parser.add_argument('--batch_size', type=int, default=16,
+                    help="one step train dataset size. default: 16")
+parser.add_argument('--epochs', '--e', type=int, default=10,
+                    help="Train epochs. default: 10")
+
+parser.add_argument('--lr', '--learning_rate', type=float, default=0.0001,
+                    help='float >= 0. Learning rate. default: 0.0001')
 parser.add_argument('--b1', '--beta1', type=float, default=0.9,
                     help="float, 0 < beta < 1. Generally close to 1. default: 0.9")
 parser.add_argument('--b2', '--beta2', type=float, default=0.999,
@@ -52,27 +58,23 @@ parser.add_argument('--epsilon', type=float, default=1e-8,
                     help="float >= 0. Fuzz factor. defaults: 1e-8.")
 parser.add_argument('--decay', type=float, default=0.,
                     help=" float >= 0. Learning rate decay over each update. defaults: 0. .")
-parser.add_argument('--name', type=str,
+
+parser.add_argument('--name', type=str, default='alexnet',
                     help="Choose to use a neural network. option: {`mnist`, `alexnet`, `vgg16`, `vgg19`}")
-parser.add_argument('--checkpoint_dir', '--dir', type=str,
+parser.add_argument('--checkpoint_dir', '--dir', type=str, default='training_checkpoint',
                     help="Model save path.")
+
+parser.add_argument('--dis', type=bool, default=False,
+                    help='display matplotlib? default: False.')
 
 # Parses the parameters and prints them
 args = parser.parse_args()
 print(args)
 
+
 # check model name
 if args.name == 'lenet':
   model = LeNet(input_shape=(32, 32, 1),
-                classes=args.classes)
-elif args.name == 'alexnet':
-  model = AlexNet(input_shape=(32, 32, 1),
-                  classes=args.classes)
-elif args.name == 'vgg16':
-  model = VGG16(input_shape=(32, 32, 1),
-                classes=args.classes)
-elif args.name == 'vgg19':
-  model = VGG19(input_shape=(32, 32, 1),
                 classes=args.classes)
 else:
   model = None
@@ -149,18 +151,6 @@ def train():
 
 
 if __name__ == '__main__':
-  if args.dataset == 'mnist':
-    assert args.classes == 10
-    train_dataset, test_dataset, val_dataset = mnist.load_data_mnist()
-  elif args.dataset == 'kmnist':
-    assert args.classes == 10
-    train_dataset, test_dataset, val_dataset = kmnist.load_data_kmnist()
-  elif args.dataset == 'emnist':
-    assert args.classes == 62
-    train_dataset, test_dataset, val_dataset = emnist.load_data_emnist()
-  else:
-    exit(0)
-    raise ValueError('If you use special dataset, please reference parameter help.'
-                     '`python train.py --help / -h`.')
-
+  assert args.classes == 102
+  train_dataset, val_dataset, test_dataset = load_data()
   train()
