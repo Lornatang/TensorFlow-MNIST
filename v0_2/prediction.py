@@ -12,8 +12,8 @@
 # limitations under the License.
 # ==============================================================================
 
-from models import *
-from dataset import get_label_name
+from v0_2.models import *
+from v0_2.dataset import get_label_name
 
 import tensorflow as tf
 
