@@ -1,4 +1,4 @@
-TensorFlow==2.0.a0a
+TensorFlow==2.5.1
 TensorFlow-gpu==2.0.a0a
 numpy
 pillow
